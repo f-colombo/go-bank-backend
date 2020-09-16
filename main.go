@@ -1,7 +1,8 @@
 package main
 
-import "duomly.com/go-bank-backend/migrations"
+import "duomly.com/go-bank-backend/api"
 
 func main() {
-	migrations.Migrate()
+	// migrations.Migrate()
+	api.StartApi()
 }
