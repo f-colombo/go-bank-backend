@@ -2,6 +2,11 @@ package interfaces
 
 import "github.com/jinzhu/gorm"
 
+type Validation struct {
+	Value string
+	Valid string
+}
+
 type User struct {
 	gorm.Model
 	Username string
@@ -17,15 +22,15 @@ type Account struct {
 	UserID  uint
 }
 
-type ResponseAccount struct {
-	ID      uint
-	Name    string
-	Balance int
-}
-
 type ResponseUser struct {
 	ID       uint
 	Username string
 	Email    string
 	Accounts []ResponseAccount
+}
+
+type ResponseAccount struct {
+	ID      uint
+	Name    string
+	Balance int
 }

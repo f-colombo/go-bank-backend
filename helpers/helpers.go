@@ -1,6 +1,10 @@
 package helpers
 
 import (
+	"regexp"
+
+	"duomly.com/go-bank-backend/interfaces"
+
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 
@@ -21,7 +25,55 @@ func HashAndSalt(pass []byte) string {
 }
 
 func ConnectDB() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=127.0.0.1 port=5432 user= dbname= password= sslmode=disable")
+	db, err := gorm.Open("postgres", "host=127.0.0.1 port=5432 user=usrbank dbname=dbbank password=P@$$w0rd sslmode=disable")
 	HandleErr(err)
 	return db
 }
+
+func Validation(values []interfaces.Validation) bool {
+	username := regexp.MustCompile("^([A-Za-z0-9]{5,})+$")
+	email := regexp.MustCompile("^[A-Za-z0-9]+[@]+[A-Za-z0-9]+[.]+[A-Za-z]+$")
+
+	for i := 0; i < len(values); i++ {
+		switch values[i].Valid {
+		case "username":
+			if !username.MatchString(values[i].Value) {
+				return false
+			}
+		case "email":
+			if !email.MatchString(values[i].Value) {
+				return false
+			}
+		case "password":
+			if len(values[i].Value) < 5 {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
+// func StrValidation(values []interfaces.Validation) string {
+// 	username := regexp.MustCompile("^([A-Za-z0-9 .-_]{5,})+$")
+// 	email := regexp.MustCompile("^[A-Za-z0-9]+[@]+[A-Za-z0-9]+[.]+[A-Za-z]+$")
+
+// 	for i := 0; i < len(values); i++ {
+// 		switch values[i].Valid {
+// 		case "username":
+// 			if !username.MatchString(values[i].Value) {
+// 				return "Err Username"
+// 			}
+// 		case "email":
+// 			if !email.MatchString(values[i].Value) {
+// 				return "Err Email"
+// 			}
+// 		case "password":
+// 			if len(values[i].Value) < 5 {
+// 				return "Err Password"
+// 			}
+// 		}
+// 	}
+
+// 	return "Okay"
+// }
